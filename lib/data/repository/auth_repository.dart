@@ -15,8 +15,13 @@ class AuthRepository {
     return AuthResponse.fromJson(response);
   }
 
-  Future<AuthResponse> signUp(String email, String password) async {
+  Future<AuthResponse> signUp(
+    String name,
+    String email,
+    String password,
+  ) async {
     final response = await _apiClient.post(ApiEndPoints.localSignUp, {
+      'name': name,
       'email': email,
       'password': password,
     });

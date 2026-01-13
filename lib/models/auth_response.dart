@@ -1,12 +1,12 @@
 class AuthResponse {
   final String? token;
-  final String? error;
+  final String? message;
 
-  AuthResponse({this.token, this.error});
+  AuthResponse({this.token, this.message});
 
   factory AuthResponse.fromJson(Map<String, dynamic> json) {
-    return AuthResponse(token: json['token'], error: json['error']);
+    return AuthResponse(token: json['token'], message: json['message']);
   }
 
-  bool get isSuccess => token != null;
+  bool get isSuccess => message != null;
 }

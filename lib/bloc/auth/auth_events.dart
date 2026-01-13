@@ -8,8 +8,9 @@ class LoginRequested extends AuthEvent {
 }
 
 class SignUpRequested extends AuthEvent {
+  final String name;
   final String email;
   final String password;
 
-  SignUpRequested(this.email, this.password);
+  SignUpRequested(this.name, this.email, this.password);
 }

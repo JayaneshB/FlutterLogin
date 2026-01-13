@@ -16,6 +16,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
@@ -38,6 +39,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SignUpCard(
+              nameController: nameController,
               emailController: emailController,
               passwordController: passwordController,
               confirmPasswordController: confirmPasswordController,
@@ -59,12 +61,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
 /// SIGN UP CARD
 
 class SignUpCard extends StatelessWidget {
+  final TextEditingController nameController;
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final TextEditingController confirmPasswordController;
 
   const SignUpCard({
     super.key,
+    required this.nameController,
     required this.emailController,
     required this.passwordController,
     required this.confirmPasswordController,
@@ -97,7 +101,16 @@ class SignUpCard extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 12),
+
+          const FormLabel(text: "Name"),
+          InputField(
+            hint: "Enter your name",
+            icon: Icons.person_outline,
+            controller: nameController,
+          ),
+
+          const SizedBox(height: 20),
 
           const FormLabel(text: 'Email'),
           InputField(
@@ -119,6 +132,7 @@ class SignUpCard extends StatelessWidget {
           const SizedBox(height: 32),
 
           SignUpButton(
+            nameController: nameController,
             emailController: emailController,
             passwordController: passwordController,
             confirmPasswordController: confirmPasswordController,
@@ -186,7 +200,14 @@ class InputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
-      decoration: inputDecoration(hintText: hint, icon: icon),
+      style: const TextStyle(fontSize: 14), // smaller text
+      decoration: inputDecoration(hintText: hint, icon: icon).copyWith(
+        isDense: true, // 🔑 reduces height
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 12,
+          horizontal: 12,
+        ),
+      ),
     );
   }
 }
@@ -201,10 +222,17 @@ class PasswordField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       obscureText: true,
-      decoration: inputDecoration(
-        hintText: "Enter password",
-        icon: Icons.lock_outline,
-      ),
+      decoration:
+          inputDecoration(
+            hintText: "Enter password",
+            icon: Icons.lock_outline,
+          ).copyWith(
+            isDense: true, // 🔑 reduces height
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 12,
+              horizontal: 12,
+            ),
+          ),
     );
   }
 }
@@ -228,12 +256,14 @@ InputDecoration inputDecoration({
 /// SIGN UP BUTTON (BlocConsumer)
 
 class SignUpButton extends StatelessWidget {
+  final TextEditingController nameController;
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final TextEditingController confirmPasswordController;
 
   const SignUpButton({
     super.key,
+    required this.nameController,
     required this.emailController,
     required this.passwordController,
     required this.confirmPasswordController,
@@ -270,6 +300,7 @@ class SignUpButton extends StatelessWidget {
 
                     context.read<AuthBloc>().add(
                       SignUpRequested(
+                        nameController.text.trim(),
                         emailController.text.trim(),
                         passwordController.text.trim(),
                       ),

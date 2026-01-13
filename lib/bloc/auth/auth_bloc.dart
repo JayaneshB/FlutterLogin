@@ -20,10 +20,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       debugPrint('API SUCCESS → token: ${authResponse.token}');
 
-      if (authResponse.isSuccess) {
-        emit(AuthSuccess(authResponse.token!));
+      if (authResponse.token != null) {
+        emit(AuthSuccess(authResponse.token));
       } else {
-        emit(AuthFailure(authResponse.error ?? 'Login failed'));
+        emit(AuthFailure(authResponse.message ?? 'Login failed'));
       }
     } catch (e) {
       emit(AuthFailure(e.toString()));
@@ -33,10 +33,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _onSignUp(SignUpRequested event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
     try {
-      final authResponse = await repository.signUp(event.email, event.password);
+      final authResponse = await repository.signUp(
+        event.name,
+        event.email,
+        event.password,
+      );
 
       if (authResponse.isSuccess) {
-        emit(AuthSuccess(authResponse.token!));
+        emit(AuthSuccess(null)); // signup success, no token
         return;
       } else {
         emit(AuthFailure('Sign Up failed'));

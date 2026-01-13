@@ -35,8 +35,8 @@ class ApiClient {
   ApiClient({Dio? dio}) : _dio = dio ?? Dio() {
     _dio.options.baseUrl = ApiEndPoints.localUrl;
     _dio.options.headers = {'Content-Type': 'application/json'};
-    _dio.options.connectTimeout = const Duration(seconds: 10);
-    _dio.options.receiveTimeout = const Duration(seconds: 10);
+    _dio.options.connectTimeout = const Duration(seconds: 100);
+    _dio.options.receiveTimeout = const Duration(seconds: 100);
 
     _dio.interceptors.add(DioLoggerInterceptor());
   }
